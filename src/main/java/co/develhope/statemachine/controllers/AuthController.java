@@ -1,6 +1,8 @@
 package co.develhope.statemachine.controllers;
 
+import co.develhope.statemachine.models.dto.UserDto;
 import co.develhope.statemachine.payloads.request.SignUpRequest;
+import co.develhope.statemachine.payloads.response.SignUpResponse;
 import co.develhope.statemachine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,16 +22,16 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpRequest> signup(@Valid @RequestBody SignUpRequest signUpRequest){
-        //TODO auth user
+    public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest){
+
         userService.existByUsername(signUpRequest.getUsername());
         userService.existByEmail(signUpRequest.getEmail());
-        userService.setUserData(signUpRequest);
 
+        UserDto userDto = userService.setUserData(signUpRequest);
 
+        SignUpResponse signUpResponse = new SignUpResponse(true,"user registered sucessfully", userDto);
 
-        return new ResponseEntity<>(signUpRequest, HttpStatus.OK);
-
+        return new ResponseEntity<SignUpResponse>(signUpResponse, HttpStatus.CREATED);
 
     }
 
