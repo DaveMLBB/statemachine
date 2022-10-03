@@ -1,5 +1,7 @@
 package co.develhope.statemachine.services;
 
+import co.develhope.statemachine.models.User;
+import co.develhope.statemachine.models.dto.UserDto;
 import co.develhope.statemachine.payloads.request.SignUpRequest;
 
 public interface UserService {
@@ -7,5 +9,7 @@ public interface UserService {
 
     void existByEmail(String email);
 
-    void setUserData(SignUpRequest signUpRequest);
+    UserDto setUserData(SignUpRequest signUpRequest);
+
+    UserDto toDto(User user);
 }
