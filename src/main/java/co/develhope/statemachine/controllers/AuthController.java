@@ -21,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpRequest> signup(@Valid @RequestBody SignUpRequest signUpRequest){
-
+        //TODO auth user
         userService.existByUsername(signUpRequest.getUsername());
         userService.existByEmail(signUpRequest.getEmail());
         userService.setUserData(signUpRequest);

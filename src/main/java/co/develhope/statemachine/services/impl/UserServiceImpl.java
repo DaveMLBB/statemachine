@@ -7,6 +7,7 @@ import co.develhope.statemachine.repositories.UserRepository;
 import co.develhope.statemachine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +17,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void existByUsername(String username) {
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getUsername().isEmpty()){
             throw new BlogException(HttpStatus.BAD_REQUEST, "Username is already taken");
         }
+
     }
 
     @Override
@@ -35,14 +39,17 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().isEmpty()){
             throw new BlogException(HttpStatus.BAD_REQUEST, "email is already in use");
         }
+
     }
 
     @Override
     public void setUserData(SignUpRequest signUpRequest) {
        //TODO user
         User user = new User();
-        signUpRequest.getUsername().toLowerCase();
-        signUpRequest.getEmail().toLowerCase();
+        user.setEmail(signUpRequest.getEmail().toLowerCase());
+        user.setUsername(signUpRequest.getUsername().toLowerCase());
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+
 
 
     }
