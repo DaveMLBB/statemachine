@@ -5,7 +5,9 @@ import co.develhope.statemachine.models.Role;
 import co.develhope.statemachine.models.User;
 import co.develhope.statemachine.models.dto.UserDto;
 import co.develhope.statemachine.payloads.request.SignUpRequest;
+import co.develhope.statemachine.payloads.request.SignupActivationRequest;
 import co.develhope.statemachine.repositories.UserRepository;
+import co.develhope.statemachine.services.MailNotificationService;
 import co.develhope.statemachine.services.RoleService;
 import co.develhope.statemachine.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private RoleService roleService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private MailNotificationService mailNotificationService;
 
     @Override
     public void existByUsername(String username) {
@@ -52,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto setUserData(SignUpRequest signUpRequest) {
-       //TODO user
+
         User user = new User();
         user.setEmail(signUpRequest.getEmail().toLowerCase());
         user.setUsername(signUpRequest.getUsername().toLowerCase());
@@ -60,7 +65,8 @@ public class UserServiceImpl implements UserService {
 
         List<Role> userRoles = roleService.defaultRole();
         user.setRoles(userRoles);
-
+        user.setActivationCode(UUID.randomUUID().toString());
+        mailNotificationService.sendActivationEmail(user);
         userRepository.save(user);
         UserService userService = null;
         UserDto userDto = userService.toDto(user);
@@ -74,5 +80,15 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
         return userDto;
 
+    }
+
+    @Override
+    public void activation(SignupActivationRequest signupActivationRequest) {
+
+        User user = userRepository.findByActivationCode(signupActivationRequest.getActivationCode());
+        if (user==null) throw  new BlogException(HttpStatus.NOT_FOUND, "User not found");
+        user.setIsActive(true);
+        user.setActivationCode(null);
+        userRepository.save(user);
     }
 }

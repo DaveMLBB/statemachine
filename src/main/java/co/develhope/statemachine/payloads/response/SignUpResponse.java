@@ -29,4 +29,16 @@ public class SignUpResponse {
         this.message = message;
         this.userDto = userDto;
     }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public UserDto getUserDto() {
+        return userDto;
+    }
 }

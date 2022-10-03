@@ -15,4 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User existByUsername(@NotBlank String username);
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     User existByEmail(@NotBlank String email);
+
+    @Query("SELECT u FROM User u WHERE u.activationCode = ?1")
+    User findByActivationCode(String activationCode);
 }

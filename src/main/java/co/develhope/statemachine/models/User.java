@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -25,6 +26,13 @@ public class User {
     @Column(name = "username", unique = true)
     @Size(max = 15)
     private String username;
+
+    @Column(name = "isActive")
+    private Boolean isActive = false;
+
+    @Column(name = "activationCode")
+    private String activationCode;
+
 
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
