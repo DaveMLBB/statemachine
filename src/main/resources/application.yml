@@ -35,3 +35,6 @@ mail:
       enable: false
 debug: true
 
+app:
+  jtwSecret: KTlgvPcXbnLoYl6b5Ma1oG294dGoZ+fyxBqJiBjQjVo
+  jwtExpirationMs: 86420135
