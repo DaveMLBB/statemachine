@@ -1,7 +1,6 @@
 package co.develhope.statemachine.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,4 +34,33 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
+    public boolean validateToken(String jwt) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            return true;
+        } catch (SignatureException ex) {
+            LOGGER.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            LOGGER.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            LOGGER.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            LOGGER.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("JWT claims string is empty");
+        }
+        return false;
+    }
+
+    public Long getUserIdFromJWT(String jwt) {
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(jwt)
+                .getBody();
+
+        return Long.valueOf(claims.getSubject());
+    }
 }
+

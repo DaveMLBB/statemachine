@@ -1,13 +1,14 @@
 package co.develhope.statemachine.controllers;
 
 import co.develhope.statemachine.models.dto.UserDto;
+import co.develhope.statemachine.payloads.request.LoginRequest;
 import co.develhope.statemachine.payloads.request.SignUpRequest;
 import co.develhope.statemachine.payloads.request.SignupActivationRequest;
 import co.develhope.statemachine.payloads.response.JwtAuthenticationResponse;
-import co.develhope.statemachine.payloads.response.SignUpResponse;
 import co.develhope.statemachine.payloads.response.ApiResponse;
 import co.develhope.statemachine.security.JwtTokenProvider;
 import co.develhope.statemachine.services.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<ApiResponse> signup(@RequestBody @Valid SignUpRequest signUpRequest){
 
         userService.existByUsername(signUpRequest.getUsername());
         userService.existByEmail(signUpRequest.getEmail());

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/statemachine
+    url: jdbc:mysql://localhost:3306/statemachine?enabledTLSProtocols=TLSv1.2
     username: root
     password: ciao
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -9,6 +9,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  mvc:
+    log-request-details: true
   servlet:
     multipart:
       max-file-size: 20MB
@@ -38,3 +40,9 @@ debug: true
 app:
   jtwSecret: KTlgvPcXbnLoYl6b5Ma1oG294dGoZ+fyxBqJiBjQjVo
   jwtExpirationMs: 86420135
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG

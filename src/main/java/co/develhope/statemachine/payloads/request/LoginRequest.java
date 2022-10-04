@@ -1,4 +1,4 @@
-package co.develhope.statemachine.controllers;
+package co.develhope.statemachine.payloads.request;
 
 import lombok.Data;
 

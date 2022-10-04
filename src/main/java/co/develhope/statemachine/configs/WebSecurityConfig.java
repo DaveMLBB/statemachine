@@ -48,8 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers( "/api/**").permitAll()
+                .antMatchers( "/**").permitAll()
                 .antMatchers( "/api/auth/**").permitAll()
                 .anyRequest().authenticated();
+
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -70,4 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }
