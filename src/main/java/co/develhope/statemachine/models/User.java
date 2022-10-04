@@ -15,7 +15,8 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-@Table
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
+        @UniqueConstraint(columnNames = { "email" }) })
 public class User {
 
     @Id
@@ -23,7 +24,7 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Column(name = "username", unique = true)
+    @Column(name = "username")
     @Size(max = 15)
     private String username;
 
@@ -35,15 +36,13 @@ public class User {
 
 
     @NotBlank
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(max = 100)
     @Column(name = "password")
     private String password;
 
     @NotBlank
-    @NaturalId
     @Size(max = 40)
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     @Email
     private String email;
 

@@ -1,5 +1,7 @@
 package co.develhope.statemachine.security;
 
+import co.develhope.statemachine.services.impl.CustomUserDetailsService;
+import co.develhope.statemachine.services.impl.CustomUserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,17 +13,15 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value(value = "${app.jtwSecret}")
+    @Value(value = "${app.jwtSecret}")
     private String jwtSecret;
 
-    @Value(value = "${app.jwtExpirationMs}")
+    @Value(value = "${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
 
     public String generateToken(Authentication authentication) {
-
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
@@ -35,9 +35,18 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String jwt) {
+    public Long getUserIdFromJWT(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             LOGGER.error("Invalid JWT signature");
@@ -51,16 +60,6 @@ public class JwtTokenProvider {
             LOGGER.error("JWT claims string is empty");
         }
         return false;
-    }
-
-    public Long getUserIdFromJWT(String jwt) {
-
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(jwt)
-                .getBody();
-
-        return Long.valueOf(claims.getSubject());
     }
 }
 

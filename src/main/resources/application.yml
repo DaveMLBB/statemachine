@@ -1,6 +1,10 @@
 spring:
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    time-zone: UTC
   datasource:
-    url: jdbc:mysql://localhost:3306/statemachine?enabledTLSProtocols=TLSv1.2
+    url: jdbc:mysql://localhost:3306/statemachine?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: ciao
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -38,8 +42,8 @@ mail:
 debug: true
 
 app:
-  jtwSecret: KTlgvPcXbnLoYl6b5Ma1oG294dGoZ+fyxBqJiBjQjVo
-  jwtExpirationMs: 86420135
+  jwtSecret: secret
+  jwtExpirationInMs: 3600000
 
 logging:
   level:

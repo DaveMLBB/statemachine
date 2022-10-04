@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-@Table
+@Table(name = "roles")
 public class Role {
 
     @Id

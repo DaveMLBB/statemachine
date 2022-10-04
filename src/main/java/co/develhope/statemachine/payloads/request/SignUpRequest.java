@@ -19,11 +19,12 @@ public class SignUpRequest {
     private String username;
 
     @NotBlank
+    @Size(max = 40)
     @Email
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 64, message = " must have a minimum of 8 characters and a maximum of 64 ")
+    @Size(min = 8, max = 20,message = " must have a minimum of 8 characters and a maximum of 20 ")
     private String password;
 
 }
